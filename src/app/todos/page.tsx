@@ -11,7 +11,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { db, analytics } from "@/lib/firebase/firebase";
+import { db } from "@/lib/firebase/firebase";
 
 function TodosPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
