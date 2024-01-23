@@ -17,32 +17,65 @@ import { Project } from "../definitions/projects";
 
 const ProjectSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  description: z.string(),
-  ownnerId: z.string(),
+  name: z.string({
+    required_error: "Project name is required",
+    invalid_type_error: "Project name must be a string",
+  }),
+  description: z.string({
+    required_error: "Project description is required",
+    invalid_type_error: "Project description must be a string",
+  }),
+  ownerId: z.string({
+    invalid_type_error: "Please select a project owner",
+  }),
   dateCreated: z.date(),
 });
 
 const CreateProject = ProjectSchema.omit({
   id: true,
   dateCreated: true,
-  ownerId: true,
 });
 
-export async function createProject(formData: FormData) {
-  const { name, description } = CreateProject.parse({
+// This is temporary until @types/react-dom is updated
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createProject(prevState: State, formData: FormData) {
+  const validatedFields = CreateProject.safeParse({
     projectName: formData.get("projectName"),
     projectDescription: formData.get("projectDescription"),
+    ownerId: formData.get("ownerId"),
   });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Validation error: Failed to create project.",
+    };
+  }
+
+  const { name, description, ownerId } = validatedFields.data;
   const date = new Date();
 
-  await addDoc(collection(db, "projects"), {
-    name,
-    description,
-    dateCreated: Timestamp.fromDate(date),
-  });
-
-  console.log(`Project ${name} created successfully`);
+  try {
+    await addDoc(collection(db, "projects"), {
+      name,
+      description,
+      ownerId,
+      dateCreated: Timestamp.fromDate(date),
+    });
+    console.log(`Project ${name} created successfully`);
+  } catch (e) {
+    return {
+      message: "Firestore error: Failed to create project.",
+    };
+  }
 
   revalidatePath("/projects");
   redirect("/projects");

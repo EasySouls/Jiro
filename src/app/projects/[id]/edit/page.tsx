@@ -1,6 +1,7 @@
 import DeleteProject from "@/components/projects/DeleteProject";
 import EditProjectForm from "@/components/projects/EditProjectForm";
 import { fetchProjectById } from "@/lib/actions/projectActions";
+import { notFound } from "next/navigation";
 import React from "react";
 
 const EditProjectPage = async ({ params }: { params: { id: string } }) => {
@@ -8,7 +9,7 @@ const EditProjectPage = async ({ params }: { params: { id: string } }) => {
   const project = await fetchProjectById(id);
 
   if (!project) {
-    return <div>Project not found</div>;
+    notFound();
   }
 
   return (
