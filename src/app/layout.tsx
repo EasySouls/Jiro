@@ -5,7 +5,12 @@ import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(defaultUrl),
   title: "Jiro",
   description: "Manage your projects with ease, Jiro is here to help you.",
 };

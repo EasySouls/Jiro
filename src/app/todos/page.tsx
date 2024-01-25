@@ -1,32 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import TodoItem, { Todo } from "@/components/Todo";
-import {
-  collection,
-  addDoc,
-  query,
-  onSnapshot,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
-import { getAnalytics, logEvent } from "firebase/analytics";
-import { db } from "@/lib/firebase/firebase";
+import TodoItem from "@/components/todos/Todo";
+import { createClient } from "@/lib/supabase/client";
+import { Todo } from "@/definitions";
 
 function TodosPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<Todo>({
-    id: "",
+    id: 0,
     title: "",
     description: "",
     completed: false,
+    created_at: "",
   });
 
-  /**
-   * @description
-   * Uploads the new todo to Firestore, then resets the newTodo state.
-   * @param e React.FormEvent<HTMLFormElement>
-   */
   async function addTodo(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -34,61 +22,54 @@ function TodosPage() {
       return;
     }
 
-    await addDoc(collection(db, "todos"), {
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from("todos").insert({
       title: newTodo.title.trim(),
       description: newTodo.description,
       completed: newTodo.completed,
     });
 
-    setNewTodo({ id: "", title: "", description: "", completed: false });
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setNewTodo({
+      id: 0,
+      title: "",
+      description: "",
+      completed: false,
+      created_at: "",
+    });
   }
 
-  /**
-   * @description
-   * Fetches all the todos from Firestore and sets the todos state.
-   */
   useEffect(() => {
-    // async function logAnalytics() {
-    //   analytics.then((analytics) => {
-    //     if (analytics) {
-    //       analytics &&
-    //         logEvent(analytics, "page_view", {
-    //           page_title: "Todos",
-    //           page_location: window.location.href,
-    //           page_path: window.location.pathname,
-    //         });
-    //     } else {
-    //       console.log("Analytics not available");
-    //     }
-    //   });
-    // }
-    // logAnalytics();
-    const _analytics = getAnalytics();
-    logEvent(_analytics, "page_view", {
-      page_title: "Todos",
-      page_location: window.location.href,
-      page_path: window.location.pathname,
-    });
+    const supabase = createClient();
 
-    const q = query(collection(db, "todos"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const todos: Todo[] = [];
-      querySnapshot.forEach((doc) => {
-        todos.push({ ...doc.data(), id: doc.id } as Todo);
-      });
-      setTodos(todos);
-    });
+    const channel = supabase
+      .channel("todos")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "todos",
+        },
+        (payload) => {
+          setTodos([...todos, payload.new as Todo]);
+        }
+      )
+      .subscribe();
 
-    return () => unsubscribe();
-  }, []);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [todos]);
 
-  /**
-   * @description
-   * Deletes a todo from Firestore.
-   * @param todoId string
-   */
-  async function deleteTodo(todoId: string) {
-    await deleteDoc(doc(db, "todos", todoId));
+  async function deleteTodo(todoId: number) {
+    const supabase = createClient();
+    supabase.from("todos").delete().match({ id: todoId });
   }
 
   return (
@@ -112,7 +93,7 @@ function TodosPage() {
           <input
             type='text'
             placeholder='Description'
-            value={newTodo.description}
+            value={newTodo.description!}
             onChange={(e) => {
               setNewTodo({
                 ...newTodo,
@@ -143,7 +124,7 @@ function TodosPage() {
         <ul className='flex flex-col items-center w-full gap-4 mt-4'>
           {todos.map((todo, id) => (
             <li key={id}>
-              <TodoItem todo={todo} deleteTodo={() => deleteTodo(todo.id!)} />
+              <TodoItem todo={todo} deleteTodo={() => deleteTodo(todo.id)} />
             </li>
           ))}
         </ul>

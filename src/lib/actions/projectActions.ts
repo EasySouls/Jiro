@@ -1,19 +1,11 @@
 "use server";
 
 import { z } from "zod";
-import {
-  collection,
-  addDoc,
-  getDoc,
-  doc,
-  Timestamp,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase/firebase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Project } from "../definitions/projects";
+import { cookies } from "next/headers";
+import { createClient } from "../supabase/server";
 
 const ProjectSchema = z.object({
   id: z.string(),
@@ -61,21 +53,15 @@ export async function createProject(prevState: State, formData: FormData) {
   }
 
   const { name, description, ownerId } = validatedFields.data;
-  const date = new Date();
 
-  try {
-    await addDoc(collection(db, "projects"), {
-      name,
-      description,
-      ownerId,
-      dateCreated: Timestamp.fromDate(date),
-    });
-    console.log(`Project ${name} created successfully`);
-  } catch (e) {
-    return {
-      message: "Firestore error: Failed to create project.",
-    };
-  }
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  supabase.from("projects").insert({
+    name,
+    description,
+    ownerId,
+  });
 
   revalidatePath("/projects");
   redirect("/projects");
@@ -92,18 +78,11 @@ export async function updateProject(id: string, formData: FormData) {
     description: formData.get("projectDescription"),
   });
 
-  const projectRef = doc(db, "projects", id);
-
-  if (projectRef === null) {
-    console.error(`Project with id ${id} does not exist`);
-    return;
-  }
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   try {
-    await updateDoc(projectRef, {
-      name,
-      description,
-    });
+    supabase.from("projects").update({ name, description }).match({ id });
 
     console.log(`Project ${name} updated successfully`);
   } catch (e) {
@@ -118,29 +97,46 @@ export async function updateProject(id: string, formData: FormData) {
 }
 
 export async function deleteProject(id: string) {
-  const projectRef = doc(db, "projects", id);
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  if (projectRef === null) {
-    console.error(`Project with id ${id} does not exist`);
-    return;
+  try {
+    supabase.from("projects").delete().match({ id });
+    console.log(`Project ${id} deleted successfully`);
+  } catch (e) {
+    console.error(`Supabase error: ${e}`);
   }
-
-  await deleteDoc(projectRef);
-
-  console.log(`Project ${id} deleted successfully`);
 
   revalidatePath("/projects");
   redirect("/projects");
 }
 
 export async function fetchProjectById(id: string) {
-  const docRef = doc(db, "projects", id);
-  const docSnap = await getDoc(docRef);
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  if (docSnap.exists()) {
-    return docSnap.data() as Project;
-  } else {
-    console.error(`Project with id ${id} does not exist`);
-    return null;
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .match({ id })
+    .single();
+
+  return data;
+}
+
+export async function fetchProjectsByUserId(userId: string) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .match({ ownerId: userId });
+
+  if (error) {
+    console.error(error);
+    return [];
   }
+
+  return data;
 }

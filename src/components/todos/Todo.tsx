@@ -1,15 +1,10 @@
 "use client";
 
-export type Todo = {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-};
+import { Todo } from "@/definitions";
 
 type TodoParams = {
   todo: Todo;
-  deleteTodo: (todoId: string) => void;
+  deleteTodo: (todoId: number) => void;
 };
 
 const TodoItem = ({ todo, deleteTodo }: TodoParams) => {
@@ -29,7 +24,7 @@ const TodoItem = ({ todo, deleteTodo }: TodoParams) => {
         <input
           type='button'
           value='Delete'
-          onClick={() => deleteTodo(todo.id!)}
+          onClick={() => deleteTodo(todo.id)}
           className='p-1 bg-red-600 rounded-lg hover:bg-red-700 hover:cursor-pointer transition-colors duration-300'
         />
       </div>
