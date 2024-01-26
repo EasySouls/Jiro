@@ -47,12 +47,25 @@ function TodosPage() {
   useEffect(() => {
     const supabase = createClient();
 
+    // Fetch all todos
+    supabase
+      .from("todos")
+      .select("*")
+      .then(({ data, error }) => {
+        if (error) {
+          console.error(error);
+          return;
+        }
+
+        setTodos(data as Todo[]);
+      });
+
     const channel = supabase
       .channel("todos")
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "todos",
         },
