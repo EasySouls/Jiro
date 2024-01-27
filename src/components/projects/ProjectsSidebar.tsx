@@ -1,5 +1,5 @@
-import { Project } from "@/lib/definitions/projects";
-import Link from "next/link";
+import { Project } from '@/definitions';
+import Link from 'next/link';
 
 type Params = {
   projects: Project[];

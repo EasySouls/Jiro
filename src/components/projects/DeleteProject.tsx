@@ -1,7 +1,7 @@
-import { deleteProject } from "@/lib/actions/projectActions";
-import { TrashIcon } from "@heroicons/react/16/solid";
+import { deleteProject } from '@/lib/actions/projectActions';
+import { TrashIcon } from '@heroicons/react/16/solid';
 
-const DeleteProject = ({ id }: { id: string }) => {
+const DeleteProject = ({ id }: { id: number }) => {
   const deleteProjectWithId = deleteProject.bind(null, id);
 
   return (

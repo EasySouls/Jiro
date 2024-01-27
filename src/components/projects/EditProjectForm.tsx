@@ -1,5 +1,5 @@
-import { updateProject } from "@/lib/actions/projectActions";
-import { Project } from "@/lib/definitions/projects";
+import { Project } from '@/definitions';
+import { updateProject } from '@/lib/actions/projectActions';
 
 const EditProjectForm = ({ project }: { project: Project }) => {
   const updateProjectWithId = updateProject.bind(null, project.id);

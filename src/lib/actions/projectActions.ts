@@ -1,24 +1,23 @@
-"use server";
+'use server';
 
-import { z } from "zod";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { Project } from "../definitions/projects";
-import { cookies } from "next/headers";
-import { createClient } from "../supabase/server";
+import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { createClient } from '../supabase/server';
 
 const ProjectSchema = z.object({
   id: z.string(),
   name: z.string({
-    required_error: "Project name is required",
-    invalid_type_error: "Project name must be a string",
+    required_error: 'Project name is required',
+    invalid_type_error: 'Project name must be a string',
   }),
   description: z.string({
-    required_error: "Project description is required",
-    invalid_type_error: "Project description must be a string",
+    required_error: 'Project description is required',
+    invalid_type_error: 'Project description must be a string',
   }),
   ownerId: z.string({
-    invalid_type_error: "Please select a project owner",
+    invalid_type_error: 'Please select a project owner',
   }),
   dateCreated: z.date(),
 });
@@ -38,17 +37,17 @@ export type State = {
   message?: string | null;
 };
 
-export async function createProject(prevState: State, formData: FormData) {
+export async function createProject(formData: FormData) {
   const validatedFields = CreateProject.safeParse({
-    projectName: formData.get("projectName"),
-    projectDescription: formData.get("projectDescription"),
-    ownerId: formData.get("ownerId"),
+    projectName: formData.get('projectName'),
+    projectDescription: formData.get('projectDescription'),
+    ownerId: formData.get('ownerId'),
   });
 
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Validation error: Failed to create project.",
+      message: 'Validation error: Failed to create project.',
     };
   }
 
@@ -57,14 +56,14 @@ export async function createProject(prevState: State, formData: FormData) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  supabase.from("projects").insert({
+  supabase.from('projects').insert({
     name,
     description,
     ownerId,
   });
 
-  revalidatePath("/projects");
-  redirect("/projects");
+  revalidatePath('/projects');
+  redirect('/projects');
 }
 
 const UpdateProject = ProjectSchema.pick({
@@ -72,22 +71,22 @@ const UpdateProject = ProjectSchema.pick({
   description: true,
 });
 
-export async function updateProject(id: string, formData: FormData) {
+export async function updateProject(id: number, formData: FormData) {
   const { name, description } = UpdateProject.parse({
-    name: formData.get("projectName"),
-    description: formData.get("projectDescription"),
+    name: formData.get('projectName'),
+    description: formData.get('projectDescription'),
   });
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   try {
-    supabase.from("projects").update({ name, description }).match({ id });
+    supabase.from('projects').update({ name, description }).match({ id });
 
     console.log(`Project ${name} updated successfully`);
   } catch (e) {
     return {
-      message: "Firestore error: Failed to update project.",
+      message: 'Firestore error: Failed to update project.',
     };
   } finally {
   }
@@ -96,19 +95,19 @@ export async function updateProject(id: string, formData: FormData) {
   redirect(`/projects/${id}`);
 }
 
-export async function deleteProject(id: string) {
+export async function deleteProject(id: number) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   try {
-    supabase.from("projects").delete().match({ id });
+    supabase.from('projects').delete().match({ id });
     console.log(`Project ${id} deleted successfully`);
   } catch (e) {
     console.error(`Supabase error: ${e}`);
   }
 
-  revalidatePath("/projects");
-  redirect("/projects");
+  revalidatePath('/projects');
+  redirect('/projects');
 }
 
 export async function fetchProjectById(id: string) {
@@ -116,8 +115,8 @@ export async function fetchProjectById(id: string) {
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase
-    .from("projects")
-    .select("*")
+    .from('projects')
+    .select('*')
     .match({ id })
     .single();
 
@@ -129,8 +128,8 @@ export async function fetchProjectsByUserId(userId: string) {
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase
-    .from("projects")
-    .select("*")
+    .from('projects')
+    .select('*')
     .match({ ownerId: userId });
 
   if (error) {

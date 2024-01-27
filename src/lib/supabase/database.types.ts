@@ -9,6 +9,38 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: number
+          title: string
+        }
+        Insert: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: number
+          title?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       projects: {
         Row: {
           created_at: string
@@ -48,6 +80,7 @@ export interface Database {
           description: string | null
           id: number
           title: string
+          user_id: string | null
         }
         Insert: {
           completed?: boolean
@@ -55,6 +88,7 @@ export interface Database {
           description?: string | null
           id?: number
           title?: string
+          user_id?: string | null
         }
         Update: {
           completed?: boolean
@@ -62,8 +96,17 @@ export interface Database {
           description?: string | null
           id?: number
           title?: string
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "todos_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

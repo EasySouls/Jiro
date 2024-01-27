@@ -1,7 +1,15 @@
-import { cookies } from "next/headers";
-import Image from "next/image";
+import AuthenticatedHomePage from '@/components/AuthenticatedHomePage';
+import UnauthenticatedHomePage from '@/components/UnauthenticatedHomePage';
+import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
+import Image from 'next/image';
 
-export default function Home() {
+export default async function Home() {
+  const supabase = createClient(cookies());
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <div className='flex flex-col items-center justify-center min-h-full py-2'>
       <Image
@@ -11,7 +19,11 @@ export default function Home() {
         width={300}
         height={300}
       />
-      <h1 className='text-4xl font-bold mt-10'>Welcome to Jiro</h1>
+      {session ? (
+        <AuthenticatedHomePage session={session} />
+      ) : (
+        <UnauthenticatedHomePage />
+      )}
     </div>
   );
 }

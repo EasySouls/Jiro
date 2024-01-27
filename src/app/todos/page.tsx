@@ -1,30 +1,34 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import TodoItem from "@/components/todos/Todo";
-import { createClient } from "@/lib/supabase/client";
-import { Todo } from "@/definitions";
+import { useState, useEffect } from 'react';
+import TodoItem from '@/components/todos/Todo';
+import { createClient } from '@/lib/supabase/client';
+import { Todo } from '@/definitions';
 
-function TodosPage() {
+export default function TodosPage() {
+  const supabase = createClient();
+
+  // TODO - Add a loading state
+  // TODO - Make this a server component so it can use supabase session
+
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<Todo>({
     id: 0,
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     completed: false,
-    created_at: "",
+    created_at: '',
+    user_id: '',
   });
 
   async function addTodo(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (newTodo.title === "") {
+    if (newTodo.title === '') {
       return;
     }
 
-    const supabase = createClient();
-
-    const { data, error } = await supabase.from("todos").insert({
+    const { data, error } = await supabase.from('todos').insert({
       title: newTodo.title.trim(),
       description: newTodo.description,
       completed: newTodo.completed,
@@ -37,20 +41,19 @@ function TodosPage() {
 
     setNewTodo({
       id: 0,
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       completed: false,
-      created_at: "",
+      created_at: '',
+      user_id: '',
     });
   }
 
   useEffect(() => {
-    const supabase = createClient();
-
     // Fetch all todos
     supabase
-      .from("todos")
-      .select("*")
+      .from('todos')
+      .select('*')
       .then(({ data, error }) => {
         if (error) {
           console.error(error);
@@ -61,13 +64,13 @@ function TodosPage() {
       });
 
     const channel = supabase
-      .channel("todos")
+      .channel('todos')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "todos",
+          event: '*',
+          schema: 'public',
+          table: 'todos',
         },
         (payload) => {
           setTodos([...todos, payload.new as Todo]);
@@ -78,11 +81,10 @@ function TodosPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [todos]);
+  }, [supabase, todos]);
 
   async function deleteTodo(todoId: number) {
-    const supabase = createClient();
-    supabase.from("todos").delete().match({ id: todoId });
+    supabase.from('todos').delete().match({ id: todoId });
   }
 
   return (
@@ -134,7 +136,7 @@ function TodosPage() {
         </form>
 
         {/* A list of the current todos */}
-        <ul className='flex flex-col items-center w-full gap-4 mt-4'>
+        <ul className='flex flex-col items-center w-full gap-4'>
           {todos.map((todo, id) => (
             <li key={id}>
               <TodoItem todo={todo} deleteTodo={() => deleteTodo(todo.id)} />
@@ -145,5 +147,3 @@ function TodosPage() {
     </main>
   );
 }
-
-export default TodosPage;
