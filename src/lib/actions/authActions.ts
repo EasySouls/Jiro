@@ -1,12 +1,13 @@
-"use server";
+'use server';
 
-import { cookies, headers } from "next/headers";
-import { createClient } from "../supabase/server";
-import { redirect } from "next/navigation";
+import { cookies, headers } from 'next/headers';
+import { createClient } from '../supabase/server';
+import { redirect } from 'next/navigation';
+import { track } from '@vercel/analytics/server';
 
 export const signIn = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -17,17 +18,18 @@ export const signIn = async (formData: FormData) => {
   });
 
   if (error) {
-    return redirect("/login?message=Could not authenticate user");
+    return redirect('/login?message=Could not authenticate user');
   }
 
-  return redirect("/");
+  track('Login');
+  return redirect('/');
 };
 
 export const signUp = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  const origin = headers().get("origin");
+  const origin = headers().get('origin');
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -40,10 +42,12 @@ export const signUp = async (formData: FormData) => {
   });
 
   if (error) {
-    return redirect("/login?message=Could not authenticate user");
+    return redirect('/login?message=Could not authenticate user');
   }
 
+  track('Signup');
+
   return redirect(
-    "/login?message=Check your email to continue sign in process"
+    '/login?message=Check your email to continue sign in process'
   );
 };
