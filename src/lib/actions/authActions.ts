@@ -21,13 +21,13 @@ export const signIn = async (formData: FormData) => {
     return redirect('/login?message=Could not authenticate user');
   }
 
-  track('Login');
   return redirect('/');
 };
 
 export const signUp = async (formData: FormData) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
+  const username = formData.get('username') as string;
 
   const origin = headers().get('origin');
   const cookieStore = cookies();
@@ -38,14 +38,15 @@ export const signUp = async (formData: FormData) => {
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        username,
+      },
     },
   });
 
   if (error) {
     return redirect('/login?message=Could not authenticate user');
   }
-
-  track('Signup');
 
   return redirect(
     '/login?message=Check your email to continue sign in process'

@@ -3,6 +3,7 @@
 import { Post } from '@/definitions';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
+import PostPreview from './PostPreview';
 
 export default function RealtimePostList({
   serverPosts,
@@ -34,5 +35,11 @@ export default function RealtimePostList({
     };
   }, [supabase, posts, setPosts]);
 
-  return <pre>{JSON.stringify(posts, null, 2)}</pre>;
+  return (
+    <>
+      {posts.map((post) => (
+        <PostPreview key={post.id} post={post} />
+      ))}
+    </>
+  );
 }
