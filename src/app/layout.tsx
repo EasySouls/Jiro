@@ -27,12 +27,7 @@ export default function RootLayout({
     <html lang='en' className='dark'>
       <body className={`${inter.className} min-h-screen`}>
         <Header />
-        <div className='flex'>
-          <div className='w-1/4'>
-            <Sidebar />
-          </div>
-          <div className='w-3/4'>{children}</div>
-        </div>
+          {children}
 
         {/* Vercel */}
         <Analytics />

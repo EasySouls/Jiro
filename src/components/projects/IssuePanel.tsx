@@ -1,4 +1,4 @@
-import { Issue } from "@/app/projects/[id]/issues/page";
+import { Issue } from '@/app/(sidebar)/projects/[projectId]/issues/page';
 
 const IssuePanel = ({ issue }: { issue: Issue }) => {
   return (

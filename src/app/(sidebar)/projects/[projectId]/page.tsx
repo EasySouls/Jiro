@@ -1,7 +1,7 @@
-import { fetchProjectById } from "@/lib/actions/projectActions";
+import { fetchProjectById } from '@/lib/actions/projectActions';
 
-const ProjectPage = async ({ params }: { params: { id: string } }) => {
-  const id = params.id;
+const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
+  const id = params.projectId;
   const project = await fetchProjectById(id);
 
   return (
