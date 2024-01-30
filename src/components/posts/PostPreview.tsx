@@ -1,12 +1,16 @@
 import { Post } from '@/definitions';
 import { FaceFrownIcon, FaceSmileIcon } from '@heroicons/react/24/outline';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 
-export default async function PostPreview({ post }: { post: Post }) {
+export default function PostPreview({ post }: { post: Post }) {
   // TODO Show the athor's username
 
   return (
-    <div className='flex flex-col w-full items-center m-2 p-4 rounded-md dark:bg-slate-800 dark:text-white'>
+    <Link
+      href={`/posts/${post.id}`}
+      className='flex flex-col w-full items-center m-2 p-4 rounded-md dark:bg-slate-800 dark:text-white'
+    >
       <h2 className='text-xl font-bold'>{post.title}</h2>
       <p className='text-md'>{post.content}</p>
       <div className='flex w-full gap-4'>
@@ -19,6 +23,6 @@ export default async function PostPreview({ post }: { post: Post }) {
           {post.dislikes}
         </span>
       </div>
-    </div>
+    </Link>
   );
 }

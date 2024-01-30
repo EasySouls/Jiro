@@ -9,38 +9,86 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      posts: {
+      comments: {
         Row: {
-          author_id: string
           content: string
           created_at: string
           dislikes: number
           id: number
           likes: number
-          title: string
+          post_id: number
+          user_id: string
         }
         Insert: {
-          author_id?: string
           content?: string
           created_at?: string
           dislikes?: number
           id?: number
           likes?: number
-          title?: string
+          post_id: number
+          user_id?: string
         }
         Update: {
-          author_id?: string
           content?: string
           created_at?: string
           dislikes?: number
           id?: number
           likes?: number
-          title?: string
+          post_id?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      posts: {
+        Row: {
+          content: string
+          created_at: string
+          dislikes: number
+          id: number
+          is_published: boolean
+          likes: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          dislikes?: number
+          id?: number
+          is_published?: boolean
+          likes?: number
+          title?: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          dislikes?: number
+          id?: number
+          is_published?: boolean
+          likes?: number
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

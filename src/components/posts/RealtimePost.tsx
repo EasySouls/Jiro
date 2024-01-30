@@ -3,6 +3,7 @@
 import { Post } from '@/definitions';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
+import PostPreview from './PostPreview';
 
 export default function RealtimePost({ serverPost }: { serverPost: Post }) {
   const supabase = createClient();
@@ -31,5 +32,5 @@ export default function RealtimePost({ serverPost }: { serverPost: Post }) {
     };
   }, [supabase, post, setPost]);
 
-  return <pre>{JSON.stringify(post, null, 2)}</pre>;
+  return <PostPreview post={post} />;
 }

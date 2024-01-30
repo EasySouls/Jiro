@@ -1,3 +1,4 @@
+import NewComment from '@/components/posts/NewComment';
 import RealtimePost from '@/components/posts/RealtimePost';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
@@ -21,5 +22,16 @@ export default async function PostPage({
     notFound();
   }
 
-  return <RealtimePost serverPost={post} />;
+  const { data: comments } = await supabase
+    .from('comments')
+    .select()
+    .match({ post_id: postId });
+
+  return (
+    <>
+      <RealtimePost serverPost={post} />
+      <NewComment postId={postId} />
+      {/*TODO: <RealtimeComments serverComments={comments ?? []} /> */}
+    </>
+  );
 }
