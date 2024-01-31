@@ -52,3 +52,17 @@ export const signUp = async (formData: FormData) => {
     '/login?message=Check your email to continue sign in process'
   );
 };
+
+export const getEmailbyUserId = async (userId: string) => {
+  const supabase = createClient(cookies());
+  const { data, error } = await supabase
+    .from('users')
+    .select('email')
+    .eq('id', userId);
+
+  if (error) {
+    return null;
+  }
+
+  return data?.[0]?.email;
+};

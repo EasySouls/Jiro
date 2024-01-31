@@ -51,3 +51,30 @@ export async function addPost(prevState: State, formData: FormData) {
   revalidatePath('/posts');
   redirect('/posts');
 }
+
+export async function createComment(postId: string, comment: string) {
+  const supabase = createClient(cookies());
+  const { data: session } = await supabase.auth.getSession();
+
+  if (!session) {
+    throw new Error('Not authenticated');
+  }
+
+  await supabase.from('comments').insert({
+    post_id: Number(postId),
+    content: comment,
+  });
+}
+
+export async function deletePostById(postId: number) {
+  const supabase = createClient(cookies());
+  const { error } = await supabase.from('posts').delete().match({ id: postId });
+
+  if (error) {
+    console.error(error);
+    throw new Error('Supabase error. Failed to delete post.');
+  }
+
+  revalidatePath('/posts');
+  redirect('/posts');
+}

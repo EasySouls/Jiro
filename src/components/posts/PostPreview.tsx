@@ -1,6 +1,5 @@
 import { Post } from '@/definitions';
 import { FaceFrownIcon, FaceSmileIcon } from '@heroicons/react/24/outline';
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 export default function PostPreview({ post }: { post: Post }) {

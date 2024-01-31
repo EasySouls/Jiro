@@ -14,9 +14,11 @@ export default async function Header() {
 
   return (
     <header className='flex justify-between items-center p-4 bg-slate-600'>
-      <h1 className='text-2xl font-semibold'>Jiro</h1>
+      <Link href='/' className='text-2xl font-semibold'>
+        Jiro
+      </Link>
       <nav className='flex gap-4 hover:[&>*]:underline items-center'>
-        <Link href='/'>Home</Link>
+        <Link href='/posts'>Posts</Link>
         <Link href='/todos'>Todos</Link>
         <Link href='/projects'>Projects</Link>
         {session ? (
