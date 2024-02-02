@@ -25,9 +25,11 @@ export const signIn = async (formData: FormData) => {
 };
 
 export const signUp = async (formData: FormData) => {
+  // TODO - add validation with Zod
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const username = formData.get('username') as string;
+  const fullName = formData.get('fullname') as string;
 
   const origin = headers().get('origin');
   const cookieStore = cookies();
@@ -39,7 +41,8 @@ export const signUp = async (formData: FormData) => {
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
       data: {
-        username,
+        username: username,
+        full_name: fullName,
       },
     },
   });

@@ -46,13 +46,24 @@ const LoginPage = ({ searchParams }: { searchParams: { message: string } }) => {
         />
 
         {/* Username */}
-        <label className='tex-md' htmlFor='username'>
+        <label className='text-md' htmlFor='username'>
           Username
         </label>
         <input
           className='rounded-md px-4 py-2 bg-inherit border mb-6'
           name='username'
           placeholder='Username'
+          required
+        />
+
+        {/* Full Name */}
+        <label className='text-md' htmlFor='fullname'>
+          Full Name
+        </label>
+        <input
+          className='rounded-md px-4 py-2 bg-inherit border mb-6'
+          name='fullname'
+          placeholder='Full Name'
           required
         />
 
