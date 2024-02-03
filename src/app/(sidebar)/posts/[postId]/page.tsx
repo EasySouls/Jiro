@@ -12,32 +12,6 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 0;
 
-export async function generateMetadata({
-  params: { postId },
-  parent,
-}: {
-  params: { postId: string };
-  parent: ResolvingMetadata;
-}): Promise<Metadata> {
-  const supabase = createClient(cookies());
-  const { data: post } = await supabase
-    .from('posts')
-    .select()
-    .match({ id: postId })
-    .single();
-
-  if (!post) {
-    notFound();
-  }
-
-  return {
-    title: post.title
-      ? `${post.title} | Jiro Posts`
-      : `${post.id} | Jiro Posts`,
-    description: post.content ?? 'No content',
-  };
-}
-
 function onPostDeleteSuccess() {
   console.log('Post deleted successfully');
 }
