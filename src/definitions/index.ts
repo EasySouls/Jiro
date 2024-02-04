@@ -8,3 +8,5 @@ export type Project = any;
 export type Post = Tables<'posts'>;
 
 export type Comment = Tables<'comments'>;
+
+export type Profile = Tables<'profiles'>;

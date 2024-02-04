@@ -4,8 +4,10 @@ import Link from 'next/link';
 import LogOutButton from './LogOutButton';
 import { useUser } from '@/contexts/user';
 
+export const revalidate = 0;
+
 export default function Header() {
-  const user = useUser();
+  const { user } = useUser();
 
   return (
     <header className='flex justify-between items-center p-4 bg-slate-600'>
@@ -16,7 +18,7 @@ export default function Header() {
         <Link href='/posts'>Posts</Link>
         <Link href='/todos'>Todos</Link>
         <Link href='/projects'>Projects</Link>
-        {user?.data?.user ? (
+        {user ? (
           <LogOutButton />
         ) : (
           <Link href='/login' className='ml-4'>
