@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Sidebar from '@/components/Sidebar';
+import { Providers } from './Providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,8 +27,12 @@ export default function RootLayout({
   return (
     <html lang='en' className='dark'>
       <body className={`${inter.className} min-h-screen`}>
-        <Header />
-          {children}
+        <Providers>
+          <>
+            <Header />
+            {children}
+          </>
+        </Providers>
 
         {/* Vercel */}
         <Analytics />
@@ -36,4 +41,3 @@ export default function RootLayout({
     </html>
   );
 }
-
