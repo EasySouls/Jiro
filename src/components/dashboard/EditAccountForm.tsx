@@ -73,6 +73,7 @@ export default function EditAccountForm({ profile }: { profile: Profile }) {
 
       redirect('/dashboard');
     } catch (error) {
+      console.error('Error updating user profile', error);
       alert('Error updating user profile');
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa, ViewType } from '@supabase/auth-ui-shared';
 import { createClient } from '@/lib/supabase/client';
+import { getUrl } from '@/lib/helpers';
 
 export default function AuthForm({ viewType }: { viewType: ViewType }) {
   const supabase = createClient();
@@ -15,6 +16,7 @@ export default function AuthForm({ viewType }: { viewType: ViewType }) {
       theme='dark'
       showLinks={true}
       providers={['google']}
+      redirectTo={`${getUrl()}/auth/callback`}
     />
   );
 }

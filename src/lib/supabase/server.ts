@@ -1,6 +1,6 @@
-import { createServerClient, CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { Database } from "./database.types";
+import { createServerClient, CookieOptions } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { Database } from './database.types';
 
 export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
   return createServerClient<Database>(
@@ -22,7 +22,7 @@ export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: "", ...options });
+            cookieStore.set({ name, value: '', ...options });
           } catch (e) {
             // The 'remove' method was called from a Server Component.
             // This can be ignored if you have middleware refreshing

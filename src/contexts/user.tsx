@@ -17,7 +17,7 @@ type UserTypes = {
 };
 const UserContext = createContext<UserTypes>({} as UserTypes);
 
-const UserProvider = ({ children }: { children: React.ReactElement }) => {
+const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const router = useRouter();
 

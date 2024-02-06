@@ -3,8 +3,13 @@ import { cookies } from 'next/headers';
 
 export async function getSession() {
   const supabase = createClient(cookies());
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return session;
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    return session;
+  } catch (error) {
+    console.error('Error getting session:', error);
+    return null;
+  }
 }
