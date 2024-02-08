@@ -1,4 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -13,5 +15,12 @@ export default async function UnauthenticatedPage() {
     redirect('/');
   }
 
-  return <div>Please sign in to view your content!</div>;
+  return (
+    <div className='w-full h-full flex flex-col gap-8 items-center pt-20'>
+      <h2 className='text-2xl'>Please sign in to view your content!</h2>
+      <Button asChild>
+        <Link href='/signup'>Sign up</Link>
+      </Button>
+    </div>
+  );
 }

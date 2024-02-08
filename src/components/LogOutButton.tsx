@@ -2,20 +2,22 @@
 
 import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
 
 export default function LogOutButton() {
   const { logout } = useUser();
   const router = useRouter();
 
   return (
-    <button
+    <Button
       onClick={() => {
         logout();
         router.push('/');
       }}
-      className='py-1 px-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300'
+      variant='outline'
+      size='sm'
     >
       Sign Out
-    </button>
+    </Button>
   );
 }

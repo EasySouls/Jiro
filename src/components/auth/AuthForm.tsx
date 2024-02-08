@@ -12,8 +12,17 @@ export default function AuthForm({ viewType }: { viewType: ViewType }) {
     <Auth
       supabaseClient={supabase}
       view={viewType}
-      appearance={{ theme: ThemeSupa }}
-      theme='dark'
+      appearance={{
+        theme: ThemeSupa,
+        variables: {
+          default: {
+            colors: {
+              brand: 'blue',
+              brandAccent: 'darkblue',
+            },
+          },
+        },
+      }}
       showLinks={true}
       providers={['google']}
       redirectTo={`${getUrl()}/auth/callback`}

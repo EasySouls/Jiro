@@ -2,7 +2,7 @@
 
 import { createClient } from '../supabase/server';
 import { cookies } from 'next/headers';
-import { stripe } from '@/lib/stripe';
+import { stripe } from '@/lib/stripe/stripe';
 import { getSession } from '../supabase';
 
 export async function checkoutAction(credits: number) {

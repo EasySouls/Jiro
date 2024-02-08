@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       comments: {
@@ -50,6 +50,68 @@ export interface Database {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      members: {
+        Row: {
+          id: number
+          project_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: number
+          project_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: number
+          project_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: number
+          leader_id: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          leader_id?: string | null
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          leader_id?: string | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -136,6 +198,42 @@ export interface Database {
           }
         ]
       }
+      projects: {
+        Row: {
+          created_at: string
+          id: number
+          organization_id: number | null
+          pm_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          organization_id?: number | null
+          pm_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          organization_id?: number | null
+          pm_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projects_pm_id_fkey"
+            columns: ["pm_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       todos: {
         Row: {
           completed: boolean
@@ -176,7 +274,19 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_avatar: {
+        Args: {
+          avatar_url: string
+        }
+        Returns: Record<string, unknown>
+      }
+      delete_storage_object: {
+        Args: {
+          bucket: string
+          object: string
+        }
+        Returns: Record<string, unknown>
+      }
     }
     Enums: {
       [_ in never]: never
