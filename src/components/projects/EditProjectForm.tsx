@@ -17,7 +17,8 @@ const EditProjectForm = ({ project }: { project: Project }) => {
         name='projectDescription'
         type='text'
         placeholder='Project description'
-        defaultValue={project.description}
+        /*defaultValue={project.description*/
+        defaultValue='Description'
       />
       <button type='submit'>Update</button>
     </form>

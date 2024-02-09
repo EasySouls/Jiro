@@ -8,7 +8,6 @@ const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
     <main className='h-full w-full'>
       <h1>Project Page</h1>
       <p>{project?.name}</p>
-      <p>{project?.description}</p>
     </main>
   );
 };

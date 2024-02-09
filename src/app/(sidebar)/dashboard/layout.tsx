@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     template: '%s | Jiro Dashboard',
     default: 'Jiro Dashboard',
   },
-  description: 'The dashboard for managing your ptojects, posts and more.',
+  description: 'The dashboard for managing your projects, posts and more.',
 };
 
 export default function DashboardLayout({

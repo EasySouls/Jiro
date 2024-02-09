@@ -30,7 +30,12 @@ export default async function DashboardPage() {
       <h1>Dashboard</h1>
       <h2>Welcome, {profile.username}!</h2>
       <p>Email: {profile.email}</p>
-      <Image src={profile.avatar_url || ''} alt='Profile picture' />
+      <Image
+        src={profile.avatar_url || ''}
+        alt='Profile picture'
+        width={30}
+        height={30}
+      />
       <Link href='/dashboard/edit'>Edit profile</Link>
     </main>
   );

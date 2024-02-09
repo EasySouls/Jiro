@@ -19,6 +19,7 @@ export default function Header() {
           <Link href='/posts'>Posts</Link>
           <Link href='/todos'>Todos</Link>
           <Link href='/projects'>Projects</Link>
+          <Link href='/organizations'>Organizations</Link>
         </nav>
         {user ? (
           <LogOutButton />

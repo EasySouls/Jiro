@@ -127,10 +127,12 @@ export async function fetchProjectsByUserId(userId: string) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .match({ ownerId: userId });
+  const { data: projectIds } = await supabase
+    .from('members')
+    .select()
+    .eq('user_id', userId);
+
+  const { data, error } = await supabase.from('projects').select('*').match({});
 
   if (error) {
     console.error(error);
