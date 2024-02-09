@@ -58,8 +58,7 @@ export async function createProject(formData: FormData) {
 
   supabase.from('projects').insert({
     name,
-    description,
-    ownerId,
+    pm_id: ownerId,
   });
 
   revalidatePath('/projects');
