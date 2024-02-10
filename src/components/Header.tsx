@@ -5,6 +5,7 @@ import LogOutButton from './LogOutButton';
 import Logo from './Logo';
 import { useUser } from '@/contexts/user';
 import { Button } from './ui/button';
+import Avatar from './dashboard/Avatar';
 
 export const revalidate = 0;
 
@@ -22,7 +23,10 @@ export default function Header() {
           <Link href='/organizations'>Organizations</Link>
         </nav>
         {user ? (
-          <LogOutButton />
+          <>
+            <LogOutButton />
+            {/* Add an avatar */}
+          </>
         ) : (
           <Button variant='default' size='sm' asChild>
             <Link href='/login' className='ml-4'>

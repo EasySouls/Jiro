@@ -1,8 +1,8 @@
-import { fetchProjectById } from '@/lib/actions/projectActions';
+import { getProjectById } from '@/lib/actions/projectActions';
 
 const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
   const id = params.projectId;
-  const project = await fetchProjectById(id);
+  const project = await getProjectById(id);
 
   return (
     <main className='h-full w-full'>

@@ -201,23 +201,26 @@ export type Database = {
       projects: {
         Row: {
           created_at: string
+          description: string
           id: number
           name: string
-          organization_id: number | null
+          organization_id: number
           pm_id: string
         }
         Insert: {
           created_at?: string
+          description?: string
           id?: number
           name?: string
-          organization_id?: number | null
+          organization_id: number
           pm_id: string
         }
         Update: {
           created_at?: string
+          description?: string
           id?: number
           name?: string
-          organization_id?: number | null
+          organization_id?: number
           pm_id?: string
         }
         Relationships: [
@@ -289,6 +292,12 @@ export type Database = {
           object: string
         }
         Returns: Record<string, unknown>
+      }
+      is_organization_owner: {
+        Args: {
+          organization_id: number
+        }
+        Returns: boolean
       }
     }
     Enums: {

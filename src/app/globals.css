@@ -79,4 +79,13 @@ body,
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
 }
+

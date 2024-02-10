@@ -1,37 +1,42 @@
-import ProjectPanel from "@/components/projects/ProjectPanel";
-import { fetchProjectsByUserId } from "@/lib/actions/projectActions";
-import { redirect } from "next/navigation";
+import ProjectPanel from '@/components/projects/ProjectPanel';
+import { Button } from '@/components/ui/button';
+import { Project } from '@/definitions';
+import { getProjectsByUserId } from '@/lib/actions/projectActions';
+import { getSession } from '@/lib/supabase';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 const ProjectsPage = async () => {
-  // TODO get this from auth
-  const userId = "uid";
-  const projects = await fetchProjectsByUserId(userId);
+  const session = await getSession();
 
-  async function createProject() {
-    redirect("/projects/create");
+  if (!session) {
+    redirect('/login');
   }
 
-  if (projects.length < 1) {
+  const projects = (await getProjectsByUserId(session.user.id)).map((data) => {
+    return data.projects as Project;
+  });
+
+  if (projects.length === 0) {
     return (
-      <main className='min-h-full flex items-center justify-center'>
-        <h1>Projects</h1>
-        <h3>You don&apost seem to have any projects.</h3>
-        <p>Create a new one</p>
-        <button
-          onClick={() => createProject()}
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+      <main className='min-h-full flex flex-col p-4'>
+        <h1 className='mb-4'>Projects</h1>
+        <h3>You don&apos;t seem to have any projects.</h3>
+        <Button
+          className='w-fit mt-2 bg-blue-500 hover:bg-blue-700 text-white rounded'
+          asChild
         >
-          Create
-        </button>
+          <Link href='/projects/create'>Create Project</Link>
+        </Button>
       </main>
     );
   }
 
   return (
-    <main className='min-h-full flex items-center justify-center'>
-      <h1>Projects</h1>
+    <main className='min-h-full flex flex-col p-4'>
+      <h1 className='mb-4'>Projects</h1>
       <h3>You have {projects.length} projects.</h3>
-      <div className='grid grid-cols-3'>
+      <div className='grid grid-cols-3 mt-4'>
         {projects.map((project, id) => (
           <ProjectPanel project={project} key={id} />
         ))}

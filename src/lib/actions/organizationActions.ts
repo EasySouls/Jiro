@@ -57,12 +57,51 @@ export async function getLeaderById(leaderId: string) {
   const supabase = createClient(cookies());
   const { data, error } = await supabase
     .from('profiles')
-    .select('email')
+    .select('email, username')
     .eq('id', leaderId)
     .single();
 
   if (error) {
     console.error('Error getting leader', error);
+  }
+
+  return data;
+}
+
+export async function getProjectsByOrganizationId(organizationId: number) {
+  const supabase = createClient(cookies());
+  const { data, error } = await supabase
+    .from('projects')
+    .select()
+    .eq('organization_id', organizationId);
+
+  if (error) {
+    console.error('Error getting projects', error);
+  }
+
+  if (!data) {
+    return [];
+  }
+
+  return data;
+}
+
+export async function getUsersOrganizations() {
+  const supabase = createClient(cookies());
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Session not found');
+  }
+
+  const { data, error } = await supabase
+    .from('organizations')
+    .select()
+    .eq('leader_id', session.user.id);
+
+  if (error) {
+    console.error("Error getting user's organizations", error);
+    return [];
   }
 
   return data;

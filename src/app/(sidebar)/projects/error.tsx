@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { use, useEffect } from "react";
+import { use, useEffect } from 'react';
 
 const ProjectsErrorPage = ({
   error,
@@ -10,7 +10,6 @@ const ProjectsErrorPage = ({
   reset: () => void;
 }) => {
   useEffect(() => {
-    //TODO: Log to Firebase analytics
     console.error(error);
   }, [error]);
 

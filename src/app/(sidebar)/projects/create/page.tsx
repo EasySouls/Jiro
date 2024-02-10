@@ -1,17 +1,45 @@
-import { createProject } from "@/lib/actions/projectActions";
-import React from "react";
+import { Button } from '@/components/ui/button';
+import { getUsersOrganizations } from '@/lib/actions/organizationActions';
+import { createProject } from '@/lib/actions/projectActions';
 
-const CreateProjectPage = () => {
+// TODO Implement the form using a client component so we can use the `useForm` hook and receive errors from the server action
+
+export default async function CreateProjectPage() {
+  const availableOrganizations = await getUsersOrganizations();
+
   return (
-    <div>
-      <h1>Create your project</h1>
-      <form action={createProject}>
-        <input type='text' placeholder='Project name' />
-        <input type='text' placeholder='Project description' />
-        <button type='submit'>Create</button>
+    <main className='p-4'>
+      <h1 className='mb-4'>Create your project</h1>
+      <form
+        action={createProject}
+        className='flex flex-col gap-4 w-1/2 text-black'
+      >
+        <input
+          type='text'
+          name='projectName'
+          placeholder='Project name'
+          className='p-2 rounded-md'
+        />
+        <textarea
+          name='projectDescription'
+          placeholder='Project description'
+          className='p-2 rounded-md'
+        />
+        <select name='organizationId' className='rounded-md p-2 text-slate-500'>
+          <option>Organization</option>
+          {availableOrganizations.map((organization) => (
+            <option key={organization.id} value={organization.id}>
+              {organization.name}
+            </option>
+          ))}
+        </select>
+        <Button
+          className='w-fit bg-blue-500 hover:bg-blue-700 text-white rounded'
+          type='submit'
+        >
+          Create
+        </Button>
       </form>
-    </div>
+    </main>
   );
-};
-
-export default CreateProjectPage;
+}
