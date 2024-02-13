@@ -106,3 +106,18 @@ export async function getUsersOrganizations() {
 
   return data;
 }
+
+export async function getOrganizationName(orgId: number) {
+  const supabase = createClient(cookies());
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('name')
+    .eq('id', orgId)
+    .single();
+
+  if (error) {
+    console.error('Error getting organization name', error);
+  }
+
+  return data?.name;
+}

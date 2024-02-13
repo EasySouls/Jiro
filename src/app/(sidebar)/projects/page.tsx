@@ -17,25 +17,20 @@ const ProjectsPage = async () => {
     return data.projects as Project;
   });
 
-  if (projects.length === 0) {
-    return (
-      <main className='min-h-full flex flex-col p-4'>
-        <h1 className='mb-4'>Projects</h1>
-        <h3>You don&apos;t seem to have any projects.</h3>
-        <Button
-          className='w-fit mt-2 bg-blue-500 hover:bg-blue-700 text-white rounded'
-          asChild
-        >
-          <Link href='/projects/create'>Create Project</Link>
-        </Button>
-      </main>
-    );
-  }
-
   return (
     <main className='min-h-full flex flex-col p-4'>
       <h1 className='mb-4'>Projects</h1>
-      <h3>You have {projects.length} projects.</h3>
+      {projects.length === 0 ? (
+        <h3>You don&apos;t seem to have any projects.</h3>
+      ) : (
+        <h3>You have {projects.length} projects.</h3>
+      )}
+      <Button
+        className='w-fit mt-2 bg-blue-500 hover:bg-blue-700 text-white rounded'
+        asChild
+      >
+        <Link href='/projects/create'>Create Project</Link>
+      </Button>
       <div className='grid grid-cols-3 mt-4'>
         {projects.map((project, id) => (
           <ProjectPanel project={project} key={id} />

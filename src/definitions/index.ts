@@ -12,3 +12,5 @@ export type Comment = Tables<'comments'>;
 export type Profile = Tables<'profiles'>;
 
 export type Organization = Tables<'organizations'>;
+
+export type Task = Tables<'tasks'>;
